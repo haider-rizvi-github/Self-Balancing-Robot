@@ -1,6 +1,8 @@
 #include "pins.h"
 #include "voltage.h"
+#include "pid.h"
 #include "tb6612fng.h"
+#include "controller.h"
 
 double data = 0;
 TB6612FNG motor = TB6612FNG(STBY_PIN, AIN1, BIN1, PWMA_LEFT, PWMB_RIGHT);
@@ -28,5 +30,6 @@ void loop() {
   delay(1000);
   motor.moveBack(50);
   delay(1000);
-
+  motor.stop();
+  delay(1000);
 }

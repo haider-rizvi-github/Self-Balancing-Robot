@@ -1,4 +1,7 @@
+#pragma once
+
 #include "Arduino.h"
+
 // STBY: Standby	Input	Allows the H-bridges to work when high (has a pulldown resistor so it must actively pulled high)
 // AIN1/BIN1:	Input 1 for channels A/B	Input	One of the two inputs that determines the direction.
 // AIN2/BIN2:	Input 2 for channels A/B	Input	One of the two inputs that determines the direction.
@@ -98,18 +101,10 @@ TB6612FNGMode TB6612FNG::getMode() {
 }
 
 // Puts the motor driver into standby mode
-void TB6612FNG::standBy() {
+inline void TB6612FNG::standBy() {
   digitalWrite(stbyPin, LOW); // Enable standby
 }
 
-// Short brake: quickly stops the motors
-void TB6612FNG::shortBrake() {
-  digitalWrite(stbyPin, HIGH);  
-  digitalWrite(ain1Pin, HIGH);
-  digitalWrite(ain2Pin, HIGH);
-  digitalWrite(bin1Pin, HIGH);
-  digitalWrite(bin2Pin, HIGH);
-}
 
 // Moves both motors in the counter-clockwise direction
 void TB6612FNG::moveCCW(unsigned char speed) {
@@ -214,6 +209,27 @@ void TB6612FNG::moveBack(unsigned char speed) {
 }
 
 // Stops the motors (open circuit)
-void TB6612FNG::stop() {
-  digitalWrite(stbyPin, LOW);  // Activate standby mode, stopping the motors
+inline void TB6612FNG::stop() {
+  if (mode == SINGLE_DIRECTIONAL) {
+    digitalWrite(ain1Pin, LOW);
+    digitalWrite(ain2Pin, LOW);
+    digitalWrite(stbyPin, HIGH); 
+    analogWrite(PWMA_LEFT, 0);
+
+  } else if (mode == INVERTED_PINS_BI_DIRECTIONAL) {
+    digitalWrite(ain1Pin, HIGH);
+    digitalWrite(bin1Pin, HIGH);
+    analogWrite(PWMA_LEFT, 0);
+    analogWrite(PWMB_RIGHT, 0);
+    digitalWrite(stbyPin, HIGH);
+    
+  } else if (mode == FOUR_PINS_BI_DIRECTIONAL) {
+    digitalWrite(ain1Pin, LOW);
+    digitalWrite(ain2Pin, LOW);
+    digitalWrite(bin1Pin, LOW);
+    digitalWrite(bin2Pin, LOW);
+    analogWrite(PWMA_LEFT, 0);
+    analogWrite(PWMB_RIGHT, 0);
+    digitalWrite(stbyPin, HIGH);
+  }  
 }
