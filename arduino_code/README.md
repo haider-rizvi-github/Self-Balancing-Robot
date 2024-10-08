@@ -1,11 +1,12 @@
 
 # Inertial Measuring Unit:
-In this project MPU6050 is used as IMU.
+In this project [MPU6050](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf) is used as IMU.
 
 ## Power Managment 1 Config
 ![image](https://github.com/user-attachments/assets/1631a5d6-966e-4ab5-8da3-172b7c94a8c8)
 
-(ref: from datasheet)
+(ref: from [datasheet](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf))
+
 - Using PLL with x-axis gyroscope reference (e.g. CLKSEL = 0x01)
 - Sleep Mode Disabled (SLEEP = 0x00)
 
@@ -26,7 +27,8 @@ In this project MPU6050 is used as IMU.
 
 ![image](https://github.com/user-attachments/assets/ea1f5220-99a0-4bd3-b4ae-92d5fab33c65)
 
-(ref: from datasheet)
+(ref: from [datasheet](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf))
+
 - Full scale range as $\pm$250 deg/s for gyro and $\pm$2g for accel  (e.g. GYRO_CONFIG = 0x00 and ACCEL_CONFIG = 0x00)
 
 ```C
@@ -42,7 +44,6 @@ In this project MPU6050 is used as IMU.
   Wire.write(0x00);  //  (250deg/s full scale)
   Wire.endTransmission();
 ```
-
  
 ## Reading Values
 ![image](https://github.com/user-attachments/assets/fdfc4e3b-b1a0-46d9-923b-9a12f1bc4b09)
@@ -50,6 +51,8 @@ In this project MPU6050 is used as IMU.
 ![image](https://github.com/user-attachments/assets/d629bfd3-3008-4c23-b294-aba11e6e66e8)
 
 ![image](https://github.com/user-attachments/assets/d2778dea-06a7-4f35-9722-856238d07899)
+
+(ref: from [datasheet](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf))
 
 ```C
   // Read the raw gyro and accelerometer data
