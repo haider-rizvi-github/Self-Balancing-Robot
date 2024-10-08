@@ -8,9 +8,9 @@ To save IO pins we use TB6612FNG (H-bridge) in conjunction with SN74LVC2G14 (Two
 
 ## Truth Table:
 The resultant Truth Table looks like following:
+
 <img src= "https://github.com/user-attachments/assets/2419061f-ebe0-4e08-97cf-f5a7c60095f1"  width="240">
 
 ## Flow Chart 
 The overall implementation framework of the car motion is as shown below:
 <img src= "https://github.com/user-attachments/assets/203b838d-be3a-4089-a271-cb5dfee86af4"  width="480">
-
