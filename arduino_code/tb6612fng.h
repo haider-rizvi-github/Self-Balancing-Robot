@@ -35,7 +35,7 @@ public:
   void moveCCW(unsigned char);  // Counter Clockwise
   void moveCW(unsigned char);  // Clockwise
   void moveForw(unsigned char);  // Clockwise
-  void moveBack(unsigned char);  // Clockwise
+  void moveBack(unsigned char);  // Clockwise  { It should be counter clockwise}
   void stop();
 };
 
