@@ -1,20 +1,18 @@
 #include "pins.h"
 #include "voltage.h"
-#include "pid.h"
-#include "tb6612fng.h"
-#include "controller.h"
-#include "mpu6050_base.h"
+#include "motion_controller.h"
 
-//Setting PID parameters
-double kp_balance = 55, kd_balance = 0.75;
-double kp_speed = 10, ki_speed = 0.26;
-double kp_turn = 2.5, kd_turn = 0.5;
-double data = 0;
+// //Setting PID parameters
+// double kp_balance = 55, kd_balance = 0.75;
+// double kp_speed = 10, ki_speed = 0.26;
+// double kp_turn = 2.5, kd_turn = 0.5;
+// double data = 0;
 
-TB6612FNG motor = TB6612FNG(STBY_PIN, AIN1, BIN1, PWMA_LEFT, PWMB_RIGHT);
-PIDController pid = PIDController(kp_balance, 0, kd_balance, -3000.0f, 3000.0f);
-mpu6050_base mpu;
+// TB6612FNG motor = TB6612FNG(STBY_PIN, AIN1, BIN1, PWMA_LEFT, PWMB_RIGHT);
+// PIDController pid = PIDController(kp_balance, 0, kd_balance, -3000.0f, 3000.0f);
+// mpu6050_base mpu;
 
+motion_controller motion;
 
 void setup() {
   // put your setup code here, to run once:
@@ -24,7 +22,8 @@ void setup() {
   Serial.begin(9600);
   Wire.begin();
   Serial.print("Start:");
-  mpu.init();
+  //mpu.init();
+  motion.init();
 }
 
 void loop() {
@@ -43,17 +42,38 @@ void loop() {
   // motor.stop();
   // delay(1000);
 
-  mpu.calculate();
+  // mpu.calculate();
   // Serial.print(mpu.angle_pitch);
   // Serial.print(',');
   // // Serial.print(mpu.angle_roll);
   // // Serial.print(',');
   // Serial.println(mpu.angle_roll);
 
-  pid.Compute(0, mpu.angle_roll);
-  Serial.print(mpu.angle_roll);
-  Serial.print(',');
+  // pid.Compute(0, mpu.angle_roll);
+  // Serial.print(mpu.angle_roll);
+  // Serial.print(',');
   // Serial.print(mpu.angle_pitch);
   // Serial.print(',');
-  Serial.println(pid.Output);
+  // Serial.println(pid.Output);
+
+  motion.balance();
+
+
+//// State Pattern (eventually)
+    // getKeyValue();
+    // getBluetoothData();
+    // keyEventHandle();
+    // getDistance();
+    // voltageMeasure();
+
+    // // Delegate behavior to the current states
+    // robot.handleMotion();
+    // robot.handleFunction();
+
+    // // Other loop code
+
+////
+
+
+
 }
