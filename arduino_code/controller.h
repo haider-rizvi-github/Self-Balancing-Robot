@@ -1,18 +1,19 @@
 #include "pid.h"
 #include "tb6612fng.h"
 
+
+
 class controller
 {
 private:
-  /* data */
+  TB6612FNG myMotors;
+  PIDController pidController;
 public:
-  controller(/* args */);
+  controller(TB6612FNG myMotors, PIDController pidController) : 
+  myMotors(myMotors), pidController(pidController) {};
   ~controller();
   balance();
 };
-
-controller::controller(/* args */) {
-}
 
 controller::~controller() {
 }
