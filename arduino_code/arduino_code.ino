@@ -9,7 +9,8 @@
 // double data = 0;
 
 // TB6612FNG motor = TB6612FNG(STBY_PIN, AIN1, BIN1, PWMA_LEFT, PWMB_RIGHT);
-// PIDController pid = PIDController(kp_balance, 0, kd_balance, -3000.0f, 3000.0f);
+// // PIDController pid = PIDController(kp_balance, 0, kd_balance, -3000.0f, 3000.0f);
+// PIDController pid = PIDController(kp_speed, ki_speed, 0, -3000.0f, 3000.0f);
 // mpu6050_base mpu;
 
 motion_controller motion;
@@ -20,10 +21,12 @@ void setup() {
   pinMode(RIGHT_RECEIVE_PIN, INPUT_PULLUP);
   voltage_init(VOL_MEASURE_PIN);
   Serial.begin(9600);
-  Wire.begin();
   Serial.print("Start:");
-  //mpu.init();
+  Wire.begin();
+  // mpu.init();
   motion.init();
+  // Serial.print(motion.mpu.acc_x);
+
 }
 
 void loop() {
@@ -49,14 +52,21 @@ void loop() {
   // // Serial.print(',');
   // Serial.println(mpu.angle_roll);
 
-  // pid.Compute(0, mpu.angle_roll);
-  // Serial.print(mpu.angle_roll);
-  // Serial.print(',');
+  // pid.Compute(0, mpu.angle_pitch);
   // Serial.print(mpu.angle_pitch);
   // Serial.print(',');
   // Serial.println(pid.Output);
 
+  // if (pid.Output < 0) {motor.moveForw(pid.Output); } 
+  // else {motor.moveBack(pid.Output);}
+
   motion.balance();
+  // // motion.pid.Compute(0, motion.mpu.angle_roll);
+  // Serial.print(motion.mpu.angle_roll);
+  // Serial.print(',');
+  Serial.print(motion.mpu.angle_pitch);
+  Serial.print(',');
+  Serial.println(motion.pid.Output);
 
 
 //// State Pattern (eventually)
@@ -73,7 +83,5 @@ void loop() {
     // // Other loop code
 
 ////
-
-
 
 }

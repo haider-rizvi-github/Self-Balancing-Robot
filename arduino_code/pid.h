@@ -18,7 +18,7 @@ class PIDController {
     // Constructor to initialize PID parameters
     PIDController(float _Kp, float _Ki, float _Kd, float _IntegrationLimMin, float _IntegrationLimMax)
       : Kp(_Kp), Ki(_Ki), Kd(_Kd), IntegrationLimMin(_IntegrationLimMin), IntegrationLimMax(_IntegrationLimMax),
-        integrator(0.0f), prevError(0.0f) {}
+        integrator(0.0f), prevError(0.0f), Output(0.0f) {}
 
     // Method to update the controller with new setpoint and measurement
     float Compute(float setpoint, float measurement);

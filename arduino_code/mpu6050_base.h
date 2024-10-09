@@ -77,7 +77,7 @@ void mpu6050_base::calculate(){
 
   // Calculate the traveled roll and add this to the angle_roll variable
   //0.000001066 = 0.0000611 * (3.142(PI) / 180degr) The Arduino sin function is in radians
-  angle_roll += gyro_y * 0.000611;
+  angle_roll += gyro_y * 0.0000611;
 
   //If the IMU has yawed transfer the roll angle to the pitch angle
   angle_pitch += angle_roll * sin(gyro_z * 0.000001066);
