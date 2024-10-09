@@ -29,7 +29,7 @@ In this project [MPU6050](https://invensense.tdk.com/wp-content/uploads/2015/02/
 
 (ref: from [datasheet](https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf))
 
-- Full scale range as $\pm$250 deg/s for gyro and $\pm$2g for accel  (e.g. GYRO_CONFIG = 0x00 and ACCEL_CONFIG = 0x00)
+- Full scale range as $\pm$ 250 deg/s for gyro and $\pm$ 2g for accel  (e.g. GYRO_CONFIG = 0x00 and ACCEL_CONFIG = 0x00)
 
 ```C
   // Configuring the accelerometer (+/- 8g)
