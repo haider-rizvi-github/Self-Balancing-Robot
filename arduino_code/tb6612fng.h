@@ -1,235 +1,174 @@
+/**
+ * @file TB6612FNG.h
+ * @brief Driver for the TB6612FNG motor driver.
+ * 
+ * This library allows control of motors using the TB6612FNG motor driver.
+ * It supports multiple configurations for driving DC motors with various modes,
+ * including single-directional, inverted pins bi-directional, and four pins bi-directional.
+ * 
+ * @note The TB6612FNG must be properly wired to the microcontroller for this library to function.
+ */
+
 #pragma once
 
 #include "Arduino.h"
 
-// STBY: Standby	Input	Allows the H-bridges to work when high (has a pulldown resistor so it must actively pulled high)
-// AIN1/BIN1:	Input 1 for channels A/B	Input	One of the two inputs that determines the direction.
-// AIN2/BIN2:	Input 2 for channels A/B	Input	One of the two inputs that determines the direction.
-// PWMA/PWM:	PWM input for channels A/B	Input	PWM input that controls the speed
-// A01/B01:	Output 1 for channels A/B	Output	One of the two outputs to connect the motor
-// A02/B02:	Output 2 for channels A/B	Output	One of the two outputs to connect the motor
-
+/**
+ * @enum TB6612FNGMode
+ * @brief Enumeration for motor driver modes.
+ * 
+ * This enum defines the various operational modes of the TB6612FNG motor driver.
+ */
 enum TB6612FNGMode {
-    SINGLE_DIRECTIONAL = 1,
-    INVERTED_PINS_BI_DIRECTIONAL = 2,
-    FOUR_PINS_BI_DIRECTIONAL = 4
+    TWO_PINS_SINGLE_MOTOR = 1,        ///< Single direction control mode
+    INVERTED_PINS_TWO_MOTORS = 2, ///< Inverted pins bi-directional mode
+    FOUR_PINS_TWO_MOTORS = 4    ///< Four pins bi-directional mode
 };
 
+/**
+ * @class TB6612FNG
+ * @brief Class for controlling TB6612FNG motor driver.
+ * 
+ * This class provides an interface to control the TB6612FNG motor driver,
+ * allowing users to control motor direction, speed, and braking.
+ */
 class TB6612FNG {
 private:
-  TB6612FNGMode mode;
-  uint16_t stbyPin, pwmaPin, pwmbPin;
-  uint16_t ain1Pin, ain2Pin, bin1Pin, bin2Pin;
+    TB6612FNGMode mode;           ///< Current operating mode of the motor driver
+    uint16_t stbyPin;             ///< Standby pin number
+    uint16_t pwmaPin;             ///< PWM pin for motor A
+    uint16_t pwmbPin;             ///< PWM pin for motor B
+    uint16_t ain1Pin;             ///< Input 1 pin for motor A
+    uint16_t ain2Pin;             ///< Input 2 pin for motor A
+    uint16_t bin1Pin;             ///< Input 1 pin for motor B
+    uint16_t bin2Pin;             ///< Input 2 pin for motor B
 
 public:
-  // Constructors
-  TB6612FNG();
-  TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t ain2, uint16_t pwma);
-  TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t bin1, uint16_t pwma, uint16_t pwmb);
-  TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t ain2, uint16_t bin1, uint16_t bin2, uint16_t pwma, uint16_t pwmb);
+    /**
+     * @brief Default constructor.
+     * 
+     * Initializes the motor driver in an undefined state.
+     */
+    TB6612FNG();
 
-  TB6612FNGMode getMode();
-  // Motor control functions
-  void standBy();
-  void shortBrake();
-  void moveCCW(unsigned char);  // Counter Clockwise
-  void moveCW(unsigned char);  // Clockwise
-  void moveForw(unsigned char);  // Clockwise
-  void moveBack(unsigned char);  // Clockwise  { It should be counter clockwise}
-  void stop();
+    /**
+     * @brief Constructor for single-direction control.
+     * 
+     * @param stby Standby pin number
+     * @param ain1 Input 1 pin for motor A
+     * @param ain2 Input 2 pin for motor A
+     * @param pwma PWM pin for motor A
+     */
+    TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t ain2, uint16_t pwma);
+
+    /**
+     * @brief Constructor for full H-bridge control (2-pin bidirectional).
+     * 
+     * @param stby Standby pin number
+     * @param ain1 Input 1 pin for motor A
+     * @param bin1 Input 1 pin for motor B
+     * @param pwma PWM pin for motor A
+     * @param pwmb PWM pin for motor B
+     */
+    TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t bin1, uint16_t pwma, uint16_t pwmb);
+
+    /**
+     * @brief Constructor for full H-bridge control (4-pin bidirectional).
+     * 
+     * @param stby Standby pin number
+     * @param ain1 Input 1 pin for motor A
+     * @param ain2 Input 2 pin for motor A
+     * @param bin1 Input 1 pin for motor B
+     * @param bin2 Input 2 pin for motor B
+     * @param pwma PWM pin for motor A
+     * @param pwmb PWM pin for motor B
+     */
+    TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t ain2, uint16_t bin1, uint16_t bin2, uint16_t pwma, uint16_t pwmb);
+
+    /**
+     * @brief Initializes the motor driver pins.
+     * 
+     * This method sets the pin modes for the TB6612FNG motor driver based on the selected mode.
+     */
+    void init();
+
+    /**
+     * @brief Gets the current mode of the motor driver.
+     * 
+     * @return The current mode of the motor driver.
+     */
+    TB6612FNGMode getMode();
+
+    // Motor control functions
+    /**
+     * @brief Puts the motor driver into standby mode.
+     * 
+     * This will disable the motor outputs and put the driver into a low-power state.
+     */
+    void standBy();
+
+    /**
+     * @brief Moves motorA in the clockwise direction.
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void motorA(unsigned char speed, bool clokcwise);
+
+
+    /**
+     * @brief Moves motorB in the clockwise direction.
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void motorB(unsigned char speed, bool clokcwise);
+
+    /**
+     * @brief Moves motorB in the clockwise direction.
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void move(unsigned char speed, bool clokcwise);
+
+
+    /**
+     * @brief Applies a short brake to the motors.
+     * 
+     * This function should be implemented to provide a braking mechanism.
+     */
+    void shortBrake();
+
+    /**
+     * @brief Moves both motors in the counter-clockwise direction.
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void moveCCW(unsigned char speed);
+
+    /**
+     * @brief Moves both motors in the clockwise direction.
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void moveCW(unsigned char speed);
+
+    /**
+     * @brief Moves both motors forward (equivalent to clockwise).
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void moveForw(unsigned char speed);
+
+    /**
+     * @brief Moves both motors backward (equivalent to counter-clockwise).
+     * 
+     * @param speed The speed at which to move the motors (0-255).
+     */
+    void moveBack(unsigned char speed);
+
+    /**
+     * @brief Stops the motors (open circuit).
+     * 
+     * This method will stop the motor rotation and disable the outputs.
+     */
+    void stop();
 };
-
-// Constructor for single-direction control
-TB6612FNG::TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t ain2, uint16_t pwma) {
-  stbyPin = stby;
-  ain1Pin = ain1;
-  ain2Pin = ain2;
-  pwmaPin = pwma;
-  mode = SINGLE_DIRECTIONAL;  
-  
-  pinMode(stbyPin, OUTPUT);
-  pinMode(ain1Pin, OUTPUT);
-  pinMode(ain2Pin, OUTPUT);
-  pinMode(pwmaPin, OUTPUT);
-  pinMode(pwmbPin, OUTPUT);
-  
-  standBy();
-}
-
-// Constructor for full H-bridge control (2pin-bidirectional)
-TB6612FNG::TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t bin1, uint16_t pwma, uint16_t pwmb) {
-  stbyPin = stby;
-  ain1Pin = ain1;
-  bin1Pin = bin1;
-  pwmaPin = pwma;
-  pwmbPin = pwmb;
-  mode = INVERTED_PINS_BI_DIRECTIONAL;  
-
-  pinMode(stbyPin, OUTPUT);
-  pinMode(ain1Pin, OUTPUT);
-  pinMode(bin1Pin, OUTPUT);
-  pinMode(pwmaPin, OUTPUT);
-  pinMode(pwmbPin, OUTPUT);
-
-  standBy();
-}
-
-// Constructor for full H-bridge control (4pin-bidirectional)
-TB6612FNG::TB6612FNG(uint16_t stby, uint16_t ain1, uint16_t ain2, uint16_t bin1, uint16_t bin2, uint16_t pwma, uint16_t pwmb) {
-  stbyPin = stby;
-  ain1Pin = ain1;
-  ain2Pin = ain2;
-  bin1Pin = bin1;
-  bin2Pin = bin2;
-  pwmaPin = pwma;
-  pwmbPin = pwmb;
-  mode = FOUR_PINS_BI_DIRECTIONAL;  
-
-  pinMode(stbyPin, OUTPUT);
-  pinMode(ain1Pin, OUTPUT);
-  pinMode(ain2Pin, OUTPUT);
-  pinMode(bin1Pin, OUTPUT);
-  pinMode(bin2Pin, OUTPUT);
-  pinMode(pwmaPin, OUTPUT);
-  pinMode(pwmbPin, OUTPUT);
-
-  standBy();
-}
-
-TB6612FNGMode TB6612FNG::getMode() {
-  return mode;
-}
-
-// Puts the motor driver into standby mode
-inline void TB6612FNG::standBy() {
-  digitalWrite(stbyPin, LOW); // Enable standby
-}
-
-
-// Moves both motors in the counter-clockwise direction
-void TB6612FNG::moveCCW(unsigned char speed) {
-  if (mode == SINGLE_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(ain2Pin, HIGH);
-    digitalWrite(stbyPin, HIGH); 
-    analogWrite(PWMA_LEFT, speed);
-
-  } else if (mode == INVERTED_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(bin1Pin, HIGH);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-    
-  } else if (mode == FOUR_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(ain2Pin, HIGH);
-    digitalWrite(bin1Pin, HIGH);
-    digitalWrite(bin2Pin, LOW);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-  }  
-}
-
-// Moves both motors in the clockwise direction
-void TB6612FNG::moveCW(unsigned char speed) {
-  if (mode == SINGLE_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(ain2Pin, LOW);
-    digitalWrite(stbyPin, HIGH); 
-    analogWrite(PWMA_LEFT, speed);
-
-  } else if (mode == INVERTED_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(bin1Pin, LOW);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-    
-  } else if (mode == FOUR_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(ain2Pin, LOW);
-    digitalWrite(bin1Pin, LOW);
-    digitalWrite(bin2Pin, HIGH);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-  }  
-}
-
-void TB6612FNG::moveForw(unsigned char speed) {
-  if (mode == SINGLE_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(ain2Pin, HIGH);
-    digitalWrite(stbyPin, HIGH); 
-    analogWrite(PWMA_LEFT, speed);
-
-  } else if (mode == INVERTED_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(bin1Pin, LOW);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-    
-  } else if (mode == FOUR_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(ain2Pin, HIGH);
-    digitalWrite(bin1Pin, LOW);
-    digitalWrite(bin2Pin, HIGH);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-  }  
-}
-
-void TB6612FNG::moveBack(unsigned char speed) {
-  if (mode == SINGLE_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(ain2Pin, LOW);
-    digitalWrite(stbyPin, HIGH); 
-    analogWrite(PWMA_LEFT, speed);
-
-  } else if (mode == INVERTED_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(bin1Pin, HIGH);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-    
-  } else if (mode == FOUR_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(ain2Pin, LOW);
-    digitalWrite(bin1Pin, HIGH);
-    digitalWrite(bin2Pin, LOW);
-    analogWrite(PWMA_LEFT, speed);
-    analogWrite(PWMB_RIGHT, speed);
-    digitalWrite(stbyPin, HIGH);
-  }  
-}
-
-// Stops the motors (open circuit)
-inline void TB6612FNG::stop() {
-  if (mode == SINGLE_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(ain2Pin, LOW);
-    digitalWrite(stbyPin, HIGH); 
-    analogWrite(PWMA_LEFT, 0);
-
-  } else if (mode == INVERTED_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, HIGH);
-    digitalWrite(bin1Pin, HIGH);
-    analogWrite(PWMA_LEFT, 0);
-    analogWrite(PWMB_RIGHT, 0);
-    digitalWrite(stbyPin, HIGH);
-    
-  } else if (mode == FOUR_PINS_BI_DIRECTIONAL) {
-    digitalWrite(ain1Pin, LOW);
-    digitalWrite(ain2Pin, LOW);
-    digitalWrite(bin1Pin, LOW);
-    digitalWrite(bin2Pin, LOW);
-    analogWrite(PWMA_LEFT, 0);
-    analogWrite(PWMB_RIGHT, 0);
-    digitalWrite(stbyPin, HIGH);
-  }  
-}

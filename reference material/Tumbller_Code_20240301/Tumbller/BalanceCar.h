@@ -5,6 +5,7 @@
  * @LastEditTime: 2019-10-11 16:25:04
  * @LastEditors: Please set LastEditors
  */
+
 #include "MsTimer2.h"
 #include "KalmanFilter.h"
 #include "I2Cdev.h"
@@ -49,8 +50,7 @@ float kalmanfilter_angle;
 char balance_angle_min = -22;
 char balance_angle_max = 22;
 
-void carStop()
-{
+void carStop() {
   digitalWrite(AIN1, HIGH);
   digitalWrite(BIN1, LOW);
   digitalWrite(STBY_PIN, HIGH);
@@ -58,25 +58,22 @@ void carStop()
   analogWrite(PWMB_RIGHT, 0);
 }
 
-void carForward(unsigned char speed)
-{
+void carForward(unsigned char speed) {
   digitalWrite(AIN1, 0);
   digitalWrite(BIN1, 0);
   analogWrite(PWMA_LEFT, speed);
   analogWrite(PWMB_RIGHT, speed);
 }
 
-void carBack(unsigned char speed)
-{
+void carBack(unsigned char speed) {
   digitalWrite(AIN1, 1);
   digitalWrite(BIN1, 1);
   analogWrite(PWMA_LEFT, speed);
   analogWrite(PWMB_RIGHT, speed);
 }
 
-void balanceCar()
-{
-  sei();
+void balanceCar() {
+  sei(); // set enable interrupts
   encoder_left_pulse_num_speed += pwm_left < 0 ? -encoder_count_left_a : encoder_count_left_a;
   encoder_right_pulse_num_speed += pwm_right < 0 ? -encoder_count_right_a : encoder_count_right_a;
   encoder_count_left_a = 0;
@@ -87,8 +84,7 @@ void balanceCar()
   double balance_control_output = kp_balance * (kalmanfilter_angle - angle_zero) + kd_balance * (kalmanfilter.Gyro_x - angular_velocity_zero);
 
   speed_control_period_count++; 
-  if (speed_control_period_count >= 8)
-  {
+  if (speed_control_period_count >= 8) {
     speed_control_period_count = 0;
     double car_speed = (encoder_left_pulse_num_speed + encoder_right_pulse_num_speed) * 0.5;
     encoder_left_pulse_num_speed = 0;

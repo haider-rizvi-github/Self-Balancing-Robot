@@ -1,4 +1,3 @@
-#include "pins.h"
 #include "voltage.h"
 #include "motion_controller.h"
 
@@ -64,9 +63,9 @@ void loop() {
   // // motion.pid.Compute(0, motion.mpu.angle_roll);
   // Serial.print(motion.mpu.angle_roll);
   // Serial.print(',');
-  Serial.print(motion.mpu.angle_pitch);
+  Serial.print((float)motion.pwm_left);
   Serial.print(',');
-  Serial.println(motion.pid.Output);
+  Serial.println((float)motion.pwm_right);
 
 
 //// State Pattern (eventually)
@@ -75,13 +74,9 @@ void loop() {
     // keyEventHandle();
     // getDistance();
     // voltageMeasure();
-
     // // Delegate behavior to the current states
     // robot.handleMotion();
     // robot.handleFunction();
-
     // // Other loop code
-
 ////
-
 }
