@@ -84,7 +84,7 @@ In this project [MPU6050](https://invensense.tdk.com/wp-content/uploads/2015/02/
 ```
 
 ## Gyro drift
-we can calibrate gyro in order to offset gyro drift
+we can calibrate gyro in order to offset gyro drift.
 
 ```C
   // Read the raw acc and gyro data from the MPU_6050 1000 times
@@ -101,4 +101,10 @@ we can calibrate gyro in order to offset gyro drift
   gyro_x_cal = gyro_x_cal / 1000;
   gyro_y_cal = gyro_y_cal / 1000;
   gyro_z_cal = gyro_z_cal / 1000;
+```
+## Enable Interrupt
+We can measure DC motor relative rotation using  embedded hall sensor feedback signals. This can be done enabling interrupt pin on Pin 2 & 4. Using using [EnableInterrupt.h](https://github.com/GreyGnome/EnableInterrupt) library (Author: Mike "GreyGnome" Schwager) one can enable interrupt on any arduino pin. 
+```C
+  enableInterrupt(ENCODER_LEFT_A_PIN|PINCHANGEINTERRUPT, encoderCounterLeftA, CHANGE);
+  enableInterrupt(ENCODER_RIGHT_A_PIN, encoderCounterRightA, CHANGE);
 ```
