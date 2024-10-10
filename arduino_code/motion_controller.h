@@ -10,13 +10,15 @@
 #include "HardwareSerial.h"
 
 // Volatile variables that track the pulse counts from the encoders.
-volatile unsigned long encoder_count_left_a = 0; 
-volatile unsigned long encoder_count_right_a = 0;
+volatile int long encoder_count_left_a = 0; 
+volatile int long encoder_count_right_a = 0;
 /* Note: 
     'volatile' tells the compiler that the value of encoder_count_right_a can change at any time, outside of the normal program flow. 
     This is commonly used for variables that are modified within an interrupt service routine (ISR) or by another thread. */
 void encoderCounterLeftA();
 void encoderCounterRightA();
+double pwm_left = 0;
+double pwm_right = 0;
 
 class motion_controller {
   private:
@@ -34,8 +36,7 @@ class motion_controller {
     TB6612FNG motor;
     PIDController pid;
     mpu6050_base mpu;
-    double pwm_left = 0;
-    double pwm_right = 0;
+
     motion_controller() : motor(TB6612FNG(STBY_PIN, AIN1, BIN1, PWMA_LEFT, PWMB_RIGHT)),
       pid(PIDController(kp_balance, 0, kd_balance, -3000.0f, 3000.0f)),
       mpu(mpu6050_base()){
@@ -73,11 +74,11 @@ void motion_controller::balance() {
   pwm_right = constrain(pwm_right, -255, 255);
   (pwm_left < 0) ? motor.motorA(-pwm_left, 1) : motor.motorA(pwm_left, 0);
   (pwm_right < 0) ? motor.motorB(-pwm_right, 1) : motor.motorB(pwm_right, 0);
-
 }
 
 void encoderCounterLeftA() {
-  encoder_count_left_a++;
+  encoder_count_left_a += (pwm_left > 0) - (pwm_left < 0); 
+  // This approach eliminates branching, making it faster for embedded systems
 }
 
 void encoderCounterRightA() {

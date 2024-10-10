@@ -63,9 +63,9 @@ void loop() {
   // // motion.pid.Compute(0, motion.mpu.angle_roll);
   // Serial.print(motion.mpu.angle_roll);
   // Serial.print(',');
-  Serial.print((float)motion.pwm_left);
+  Serial.print((float)pwm_left);
   Serial.print(',');
-  Serial.println((float)motion.pwm_right);
+  Serial.println(encoder_count_left_a);
 
 
 //// State Pattern (eventually)
