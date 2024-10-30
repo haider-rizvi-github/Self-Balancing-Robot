@@ -3,7 +3,7 @@
 void mpu6050_base::init() {
   setup_mpu_6050_registers();
 
-    // Gyro calibration
+    // Gyro calibration+++++++++++++++++++++++++++++
   for (int i = 0; i < CALIBRATION_SAMPLES; i++) {
     read_mpu_6050_data();
     gyro_x_cal += gyro_x;   //add the gyro x offset to the gyro_x_cal variable

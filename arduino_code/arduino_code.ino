@@ -18,7 +18,7 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(LEFT_RECEIVE_PIN, INPUT_PULLUP);
   pinMode(RIGHT_RECEIVE_PIN, INPUT_PULLUP);
-  voltage_init(VOL_MEASURE_PIN);
+  voltage_init();
   Serial.begin(9600);
   Serial.print("Start:");
   Wire.begin();
@@ -59,14 +59,17 @@ void loop() {
   // if (pid.Output < 0) {motor.moveForw(pid.Output); } 
   // else {motor.moveBack(pid.Output);}
 
+  // Serial.print('1');
   motion.balance();
+  
   // // motion.pid.Compute(0, motion.mpu.angle_roll);
   // Serial.print(motion.mpu.angle_roll);
-  // Serial.print(',');
+  Serial.print((float)pwm_right);
+  Serial.print(',');
   Serial.print((float)pwm_left);
   Serial.print(',');
-  Serial.println(encoder_count_left_a);
-
+  // Serial.println(encoder_count_left_a);
+  Serial.println(voltage_read());
 
 //// State Pattern (eventually)
     // getKeyValue();
